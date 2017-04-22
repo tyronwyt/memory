@@ -17,7 +17,7 @@ function getColours() {
 
 function gameSetup() {
   getColours();
-  var container = document.getElementById('container');
+  var game_board = document.getElementById('game_board');
   var outputLevel = document.getElementById('level');
   outputLevel.textContent = "Level: " + level;
   for (var i = 0; i < colours.length; i++) {
@@ -26,8 +26,15 @@ function gameSetup() {
     block.classList.add('block');
     block.setAttribute("style", bgColour);
     block.setAttribute("data-id", i);
-    container.appendChild(block);
+    game_board.appendChild(block);
   }
+  var startButton = document.createElement('button');
+  startButton.innerHTML = "Start Game";
+  startButton.setAttribute("id", 'start_btn');
+  game_board.appendChild(startButton);
+  document.getElementById('start_btn').onclick = function() {
+    startGame();
+  };
 }
 
 function startGame() {
