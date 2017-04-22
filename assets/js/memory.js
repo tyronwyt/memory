@@ -25,15 +25,14 @@ function gameSetup() {
     var bgColour = "background: " + colours[i];
     block.classList.add('block');
     block.setAttribute("style", bgColour);
+    block.setAttribute("data-id", i);
     container.appendChild(block);
   }
 }
 
 function startGame() {
   var blocks = document.getElementsByClassName('block');
-  // blocks.onclick = function () {
-  //   console.log("clicked");
-  // };
+
   delayLoop(level);
 }
 
@@ -47,6 +46,19 @@ function delayLoop(to, at) {
           fadeOut(blocks[selectedBlock], to, at)
         }, 200);
 
+      } else {
+        for (var i = 0; i < blocks.length; i++) {
+          blocks[i].onclick = function(){
+          var blockId = this.getAttribute("data-id");
+          console.log(blockId + " " + colourOrder[count]);
+            if (blockId == colourOrder[count]) {
+              console.log("correct");
+              count ++;
+            } else {
+              console.log("wrong");
+            }
+          };
+        }
       }
   }
 
