@@ -2,7 +2,7 @@ var app = {
 
 // Declare vars
   blockColours: ["red", "lime", "blue", "yellow"],
-  level: 5,
+  level: 1,
   speed: 600,
   colourOrder: [],
   count: 0,
@@ -20,15 +20,6 @@ var app = {
     var outputLevel = document.getElementById('level');
   },
 
-// Create event listener
-  createEvent: function(name, id, func){
-    var name = document.getElementById(id);
-    name.onclick = function(){
-        func();
-    };
-
-  },
-
 
   createBoard: function() {
     //Create coloured squares
@@ -44,11 +35,14 @@ var app = {
     startButton.innerHTML = "Start Game";
     startButton.setAttribute("id", 'start_btn');
     game_board.appendChild(startButton);
-    // this.createEvent("startBtn", "start_btn", this.getColours);
+
+
     var startBtn = document.getElementById('start_btn');
+
     startBtn.onclick = function(){
 
       app.startGame();
+      this.remove();
     };
 
   },
@@ -57,6 +51,7 @@ var app = {
 // create a random selection of colours based on level
   getColours: function() {
     this.colourOrder = [];
+    app.count = 0;
     for (var i = 0; i < this.level; i++) {
         var random =  Math.floor(Math.random() * (4 - 0)) + 0;
         this.colourOrder.push(random);
@@ -67,7 +62,7 @@ var app = {
 // start the game
   startGame: function() {
     app.getColours();
-    this.delayLoop(this.level);
+    app.delayLoop(app.level);
   },
 
 // Delay loop
@@ -85,15 +80,12 @@ var app = {
           for (var i = 0; i < blocks.length; i++) {
             blocks[i].onclick = function(){
               var blockId = this.getAttribute("data-id");
-
-              console.log(blockId + " " + app.colourOrder[app.count]);
                 if (blockId == app.colourOrder[app.count]) {
-                  console.log("correct");
                   app.count ++;
-                  if (app.count >= level) {
-                    document.getElementById('response').innerHTML = "Correct";
+                  console.log(app.count);
+                  if (app.count == app.level) {
+                    app.addNextBtn();
                     //place new button to restart with new level
-
                   }
                 } else {
                   console.log("wrong");
@@ -101,6 +93,7 @@ var app = {
                     blocks[i].setAttribute("style", "background: grey")
                   }
                   document.getElementById('response').innerHTML = "Wrong, try again";
+                  app.addNewGameBtn();
                 }
               };
           }
@@ -112,7 +105,35 @@ var app = {
       block.classList.remove("blockOn");
       app.delayLoop(to, at + 1);
     }, 500);
-  }
+  },
+
+  addNextBtn: function(){
+    var nextBtn = document.createElement('button');
+    nextBtn.innerHTML = "Next Level";
+    nextBtn.setAttribute("id", 'next_btn');
+    game_board.appendChild(nextBtn);
+    document.getElementById('next_btn').onclick = function() {
+      app.level ++;
+      app.startGame();
+      this.remove();
+    };
+  },
+
+  addNewGameBtn: function(){
+    var newGameBtn = document.createElement('button');
+    newGameBtn.innerHTML = "New Game";
+    newGameBtn.setAttribute("id", 'new_game');
+    game_board.appendChild(newGameBtn);
+    document.getElementById('new_game').onclick = function() {
+      var gameboard = document.getElementById('game_board');
+      while (gameboard.hasChildNodes()) {
+    gameboard.removeChild(gameboard.lastChild);
+}
+      app.level = 1;
+      app.createBoard();
+      this.remove();
+    };
+  },
 
 
 
